@@ -1,0 +1,18 @@
+<html>
+    <head><title>News Filter</title></head>
+    <body style="text-align: center; font-family: Arial, sans-serif;">
+        <h1>Filter News results</h1>
+        <ul style="text-align:left;">
+            {% if filtered %}
+                {% for headline in filtered %}
+                    <li>{{headline.headline}} - <em>{{headline.source}}</em></li>
+                {% endfor %}
+            {% else %}
+                <li>No results found.</li>
+            {% endif %}
+        </ul>
+        <footer>
+            <a href="/">Home</a>
+        </footer>
+    </body>
+</html>

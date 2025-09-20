@@ -1,0 +1,278 @@
+openapi: 3.0.3
+info:
+  title: Simple News API
+  description: Backend API for news scraping based on exec_7.py
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000
+    description: Local server
+
+paths:
+  /sources:
+    get:
+      summary: Get all news sources
+      responses:
+        '200':
+          description: List of news sources
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Source'
+              example:
+                - id: 1
+                  name: "FAZ"
+                  url: "https://www.faz.net/aktuell/"
+                  selector: "h3"
+                  enable: true
+                - id: 2
+                  name: "SZ.de"
+                  url: "https://www.sueddeutsche.de/"
+                  selector: "h3"
+                  enable: true
+                - id: 3
+                  name: "The New York Times"
+                  url: "https://www.nytimes.com/"
+                  selector: "div.css-xdandi"
+                  enable: true
+                - id: 4
+                  name: "BBC"
+                  url: "https://www.bbc.com/"
+                  selector: "h2"
+                  enable: true
+    
+    post:
+      summary: Add new news source
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "CNN"
+                url:
+                  type: string
+                  example: "https://www.cnn.com/"
+                selector:
+                  type: string
+                  example: "h2"
+                enable:
+                  type: boolean
+                  example: true
+              required:
+                - url
+                - selector
+      responses:
+        '201':
+          description: Source created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Source'
+
+  /sources/{id}:
+    get:
+      summary: Get source by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Source ID (1=FAZ, 2=SZ.de, 3=NYTimes, 4=BBC)
+      responses:
+        '200':
+          description: Source details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Source'
+              examples:
+                FAZ:
+                  value:
+                    id: 1
+                    name: "FAZ"
+                    url: "https://www.faz.net/aktuell/"
+                    selector: "h3"
+                    enable: true
+                SZ:
+                  value:
+                    id: 2
+                    name: "SZ.de"
+                    url: "https://www.sueddeutsche.de/"
+                    selector: "h3"
+                    enable: true
+                NYTimes:
+                  value:
+                    id: 3
+                    name: "The New York Times"
+                    url: "https://www.nytimes.com/"
+                    selector: "div.css-xdandi"
+                    enable: true
+                BBC:
+                  value:
+                    id: 4
+                    name: "BBC"
+                    url: "https://www.bbc.com/"
+                    selector: "h2"
+                    enable: true
+        '404':
+          description: Source not found
+
+  /scrape/all:
+    get:
+      summary: Scrape all enabled sources
+      description: Scrapes headlines from all 4 news sources (FAZ, SZ.de, NYTimes, BBC)
+      responses:
+        '200':
+          description: Scraping completed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Scraped 156 headlines from 4 sources"
+                  count:
+                    type: integer
+                    example: 156
+
+  /scrape/{id}:
+    get:
+      summary: Scrape specific source
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            enum: [1, 2, 3, 4]
+          description: "Source ID: 1=FAZ, 2=SZ.de, 3=The New York Times, 4=BBC"
+      responses:
+        '200':
+          description: Source scraped
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Scraped 35 headlines from BBC"
+                  source:
+                    $ref: '#/components/schemas/Source'
+                  headlines:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Headline'
+        '404':
+          description: Source not found
+
+  /headlines:
+    get:
+      summary: Get cached headlines
+      description: Get all cached headlines from FAZ, SZ.de, The New York Times, and BBC
+      responses:
+        '200':
+          description: List of headlines
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Headline'
+
+  /search:
+    get:
+      summary: Search headlines by keyword
+      description: Search through cached headlines from all 4 news sources
+      parameters:
+        - name: keyword
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "politics"
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  keyword:
+                    type: string
+                    example: "politics"
+                  total:
+                    type: integer
+                    example: 120
+                    description: "Total headlines from all 4 sources"
+                  found:
+                    type: integer
+                    example: 25
+                    description: "Headlines matching keyword"
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Headline'
+
+components:
+  schemas:
+    Source:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: "Unique identifier (1-4 for default sources)"
+        name:
+          type: string
+          example: "BBC"
+          enum: ["FAZ", "SZ.de", "The New York Times", "BBC"]
+          description: "Name of the news source"
+        url:
+          type: string
+          example: "https://www.bbc.com/"
+          description: "URL of the news website"
+        selector:
+          type: string
+          example: "h2"
+          description: "CSS selector for extracting headlines"
+        enable:
+          type: boolean
+          example: true
+          description: "Whether this source is enabled for scraping"
+      required:
+        - id
+        - name
+        - url
+        - selector
+        - enable
+
+    Headline:
+      type: object
+      properties:
+        text:
+          type: string
+          example: "Breaking news headline from German newspaper"
+          description: "The actual headline text (cleaned using clean_text function)"
+        source:
+          type: string
+          example: "BBC"
+          enum: ["FAZ", "SZ.de", "The New York Times", "BBC"]
+          description: "Which news source this headline came from"
+        scraped_at:
+          type: number
+          example: 1717264919
+          description: "Unix timestamp when headline was scraped"
+      required:
+        - text
+        - source
+        - scraped_at

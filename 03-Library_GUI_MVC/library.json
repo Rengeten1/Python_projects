@@ -1,0 +1,26 @@
+{
+    "Book 1": {
+        "title": "abra",
+        "author": "cadarba",
+        "year": "2000",
+        "status": "available"
+    },
+    "Book 2": {
+        "title": "Har Puttar",
+        "author": "JP.Morgan",
+        "year": "1989",
+        "status": "available"
+    },
+    "Book 3": {
+        "title": "Hay Par",
+        "author": "Lorgn",
+        "year": "1982",
+        "status": "available"
+    },
+    "Book 4": {
+        "title": "ry Puttr",
+        "author": "J.Morgan",
+        "year": "1919",
+        "status": "available"
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "Member 1": {
+        "Name": "Lary Black",
+        "Email": "larry.black@gmail.com",
+        "course": "FAU-4"
+    },
+    "Member 2": {
+        "Name": "Jack Black",
+        "Email": "jack.black@gmail.com",
+        "course": "FAU-2"
+    }
+}

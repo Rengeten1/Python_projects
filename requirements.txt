@@ -1,0 +1,13 @@
+fastapi
+unicorn
+pydantic
+requests
+bs4
+tkinter
+multiprocessing
+matplotlib
+threading
+pandas
+ipykernel
+jupyter
+line_profiler
