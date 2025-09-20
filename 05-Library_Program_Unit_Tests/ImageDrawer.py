@@ -1,7 +1,5 @@
  # Library Management System V: 3.0
-# Created by: Rownak Deb Kabya & Marcos Blanco-Leon
-# Email: rownak.kabya@stud.th-deg.de 
-# Email: marcos.blanco-Leon@stud.th-deg.de
+# Created by: Rownak Deb Kabya
 # This code is responsible for drawing rectangles on images and performing OCR.
 
 import tkinter as tk

@@ -1,9 +1,7 @@
 fastapi
 unicorn
 pydantic
-requests
 bs4
-tkinter
 multiprocessing
 matplotlib
 threading

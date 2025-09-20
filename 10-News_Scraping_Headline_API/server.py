@@ -1,5 +1,4 @@
 # Rownak Deb Kabya
-# rownak.kabya@stud.th-deg.de
 # News Scraping and Headline API Server
 
 # This program provides a simple HTTP API server for scraping news headlines from various sources.
